@@ -1,0 +1,18 @@
+# Example
+schema_version = "1.0.0"
+
+id = "awesome_repos"
+name = "Awesome Repos"
+tagline = "Auto-enable awesome Blender extension repositories to quickly install 3rd party add-ons and themes."
+type = "add-on"
+tags = ["System", "User Interface"]
+version = "0.0.1"
+blender_version_min = "4.2.0"
+website = "http://github.com/agajdosi/awesome-repos"
+maintainer = "Andreas Gajdosik <andreas@gajdosik.org>"
+license = [
+    "SPDX:GPL-3.0-or-later"
+]
+copyright = [
+    "Andreas Gajdosik <andreas@gajdosik.org>"
+]
