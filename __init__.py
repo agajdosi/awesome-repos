@@ -3,23 +3,21 @@ from bpy.types import AddonPreferences, PropertyGroup
 from bpy.props import BoolProperty, StringProperty, CollectionProperty
 
 REPOSITORIES = [
-    {"name": "BlenderKit.com", "remote_path": "https://blenderkit.com/api/v1/extensions", "enabled": False, "description": "Production repository"},
-    {"name": "devel.BlenderKit.com", "remote_path": "https://devel.blenderkit.com/api/v1/extensions", "enabled": True, "description": "Development repository"},
-    {"name": "staging.BlenderKit.org", "remote_path": "https://staging.blenderkit.com/api/v1/extensions", "enabled": False, "description": "Staging repository"},
+    {"name": "blenderkit.com", "remote_url": "https://blenderkit.com/api/v1/extensions", "enabled": False, "description": "Production repository"},
 ]
 
 def repository_enabled_update(self, context):
     preferences = bpy.context.preferences    
-    remote_paths = [repo.remote_path for repo in preferences.filepaths.extension_repos]
-    names = [repo.name for repo in preferences.filepaths.extension_repos]
+    remote_urls = [repo.remote_url for repo in preferences.extensions.repos]
+    names = [repo.name for repo in preferences.extensions.repos]
     if self.enabled == True:
-        if self.remote_path in remote_paths or self.name in names:
+        if self.remote_url in remote_urls or self.name in names:
             return
-        bpy.ops.preferences.extension_repo_add(name=self.name, remote_path=self.remote_path, type='REMOTE')
+        bpy.ops.preferences.extension_repo_add(name=self.name, remote_url=self.remote_url, type='REMOTE')
         return
 
-    if self.remote_path in remote_paths:
-        index = remote_paths.index(self.remote_path)
+    if self.remote_url in remote_urls:
+        index = remote_urls.index(self.remote_url)
         bpy.ops.preferences.extension_repo_remove(index=index)
         return
     if self.name in names:
@@ -30,7 +28,7 @@ def repository_enabled_update(self, context):
 class Repository(PropertyGroup):
     enabled: BoolProperty(name="Enabled", default=True, update=repository_enabled_update)
     name: StringProperty(name="Name")
-    remote_path: StringProperty(name="URL")
+    remote_url: StringProperty(name="URL")
     description: StringProperty(name="Description")
 
 class AwesomeReposPreferences(AddonPreferences):
@@ -47,13 +45,13 @@ class AwesomeReposPreferences(AddonPreferences):
 def init_timer():
     prefs = bpy.context.preferences.addons[__name__].preferences
     pref_names = [pref.name for pref in prefs.repositories]
-    pref_remote_paths = [pref.remote_path for pref in prefs.repositories]
+    pref_remote_urls = [pref.remote_url for pref in prefs.repositories]
     for REPO in REPOSITORIES:
-        if REPO["name"] in pref_names or REPO["remote_path"] in pref_remote_paths:
+        if REPO["name"] in pref_names or REPO["remote_url"] in pref_remote_urls:
             continue
         repo_item = prefs.repositories.add()
         repo_item.name = REPO["name"]
-        repo_item.remote_path = REPO["remote_path"]
+        repo_item.remote_url = REPO["remote_url"]
         repo_item.description = REPO["description"]
         repo_item.enabled = REPO.get("enabled", True)
     
