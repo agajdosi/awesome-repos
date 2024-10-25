@@ -3,7 +3,8 @@ from bpy.types import AddonPreferences, PropertyGroup
 from bpy.props import BoolProperty, StringProperty, CollectionProperty
 
 REPOSITORIES = [
-    {"name": "blenderkit.com", "remote_url": "https://blenderkit.com/api/v1/extensions", "enabled": False, "description": "Production repository"},
+    {"name": "BlenderKit.com", "remote_url": "https://blenderkit.com/api/v1/extensions", "enabled": False, "description": "BlenderKit's official and community repository"},
+    {"name": "Polygoniq.com", "remote_url": "https://extensions.polygoniq.com/api/v1/extensions", "enabled": False, "description": "Polygoniq's official repository"}
 ]
 
 def repository_enabled_update(self, context):
@@ -31,6 +32,7 @@ class Repository(PropertyGroup):
     remote_url: StringProperty(name="URL")
     description: StringProperty(name="Description")
 
+
 class AwesomeReposPreferences(AddonPreferences):
     bl_idname = __name__
     repositories: CollectionProperty(type=Repository)
@@ -41,6 +43,7 @@ class AwesomeReposPreferences(AddonPreferences):
         for repo in self.repositories:
             row = layout.row()
             row.prop(repo, "enabled", text=f"{repo.name}: {repo.description}")
+
 
 def init_timer():
     prefs = bpy.context.preferences.addons[__name__].preferences
@@ -62,6 +65,7 @@ def register():
     bpy.utils.register_class(Repository)
     bpy.utils.register_class(AwesomeReposPreferences)
     bpy.app.timers.register(init_timer, first_interval=0.1)
+
 
 def unregister():
     bpy.utils.unregister_class(AwesomeReposPreferences)
