@@ -7,14 +7,17 @@ REPOSITORIES = [
     {"name": "Polygoniq.com", "remote_url": "https://extensions.polygoniq.com/api/v1/extensions", "enabled": False, "description": "Polygoniq's official repository"}
 ]
 
+
 def repository_enabled_update(self, context):
-    preferences = bpy.context.preferences    
+    preferences = bpy.context.preferences
     remote_urls = [repo.remote_url for repo in preferences.extensions.repos]
     names = [repo.name for repo in preferences.extensions.repos]
     if self.enabled == True:
-        if self.remote_url in remote_urls or self.name in names:
+        if self.remote_url in remote_urls:
             return
-        bpy.ops.preferences.extension_repo_add(name=self.name, remote_url=self.remote_url, type='REMOTE')
+        if self.name in names:
+            return
+        bpy.ops.preferences.extension_repo_add(name=self.name, remote_url=self.remote_url, type='REMOTE', use_sync_on_startup=self.use_sync_on_startup)
         return
 
     if self.remote_url in remote_urls:
@@ -26,11 +29,19 @@ def repository_enabled_update(self, context):
         bpy.ops.preferences.extension_repo_remove(index=index)
         return
 
+
+def repository_sync_update(self, context):
+    for repo in bpy.context.preferences.extensions.repos:
+        if repo.name != self.name or repo.remote_url != self.remote_url:
+            repo.use_sync_on_startup = self.use_sync_on_startup
+
+
 class Repository(PropertyGroup):
     enabled: BoolProperty(name="Enabled", default=True, update=repository_enabled_update)
     name: StringProperty(name="Name")
     remote_url: StringProperty(name="URL")
     description: StringProperty(name="Description")
+    use_sync_on_startup: BoolProperty(name="Sync", update=repository_sync_update)
 
 
 class AwesomeReposPreferences(AddonPreferences):
@@ -39,10 +50,13 @@ class AwesomeReposPreferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
-        layout.label(text="Enable remote repositories:")
+        row = layout.row()
+        row.label(text="Enable remote repositories:")
+        row.label(text="Sync on startup")
         for repo in self.repositories:
             row = layout.row()
             row.prop(repo, "enabled", text=f"{repo.name}: {repo.description}")
+            row.prop(repo, "use_sync_on_startup")
 
 
 def init_timer():
