@@ -24,5 +24,14 @@ While I do not actively monitor the repositories for malicious code, I take a st
 If notified, I will promptly investigate and remove the affected repository as soon as possible.
 
 ### Developing
-To build the add-on, run the following command:  
-`b --command extension build --output-dir ~`
+Even though this add-on can be built standardly with: `b --command extension build --output-dir ~` custom `dev.py` script is packed in the repository.
+
+To build the add-on, please run:
+`python3 build.py --install-at "<path-to-extensions/user_default>"`
+
+E.g.:
+`python3 build.py --install-at "/Users/username/Library/Application Support/Blender/4.3/extensions/user_default"`.
+
+Add-on will be built in `./out/awesome-repos.zip`.
+In `./out/awesome-repos/` you can see all the files of the .zip file directly.
+The .zip file will be also copied into the `--install-at` location, so you do not need to install it manually and you can try it right away in the Blender.
