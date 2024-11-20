@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 
 id = "awesome_repos"
 name = "Awesome Repos"
-tagline = "Auto-enable awesome Blender extension repositories to quickly install 3rd party add-ons and themes."
+tagline = "Quickly enable awesome 3rd party extensions repositories"
 type = "add-on"
 tags = ["System", "User Interface"]
 version = "0.1.0"
