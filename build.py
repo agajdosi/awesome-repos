@@ -8,6 +8,7 @@ IGNORE_PATTERNS = [
     os.path.basename(__file__), # do not include this file
     OUT_DIR, # do not include output directory
     ".gitignore",
+    ".git",
     "*.md",
     ".DS_Store",
 ]
